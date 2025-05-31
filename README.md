@@ -1,5 +1,7 @@
 # cld-fit
 
+- em desenvolvimento
+
 💪 **DevFit — Seu Treino, Seu Ritmo!**
 
 Um projeto pessoal do Claudio Jr.
