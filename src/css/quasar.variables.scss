@@ -1,25 +1,23 @@
-// Quasar SCSS (& Sass) Variables
-// --------------------------------------------------
-// To customize the look and feel of this app, you can override
-// the Sass/SCSS variables found in Quasar's source Sass/SCSS files.
+// Paleta bem-humorada e vibrante pro CLDfit 😎💪
 
-// Check documentation for full list of Quasar variables
+// Cores principais
+$primary: #ff5e57; // Vermelho coral animado
+$secondary: #00b894; // Verde-água fresh
+$accent: #ffeaa7; // Amarelo pastel leve (ideal para destaque)
 
-// Your own variables (that are declared here) and Quasar's own
-// ones will be available out of the box in your .vue/.scss/.sass files
+// Fundo escuro e página escura
+$dark: #1e1e2f; // Roxo-azulado escuro
+$dark-page: #121218; // Mais escuro ainda pro fundo da página
 
-// It's highly recommended to change the default colors
-// to match your app's branding.
-// Tip: Use the "Theme Builder" on Quasar's documentation website.
+// Estados com mais personalidade
+$positive: #00cec9; // Azul piscina: feedbacks positivos e geladinhos
+$negative: #d63031; // Vermelho tomate: erros, mas sem drama
+$info: #0984e3; // Azul vivo: informação clara
+$warning: #fdcb6e; // Laranja claro: avisos, mas com um sorriso
 
-$primary   : #1976D2;
-$secondary : #26A69A;
-$accent    : #9C27B0;
+// Extras (opcional)
+$fun-color: #fab1a0; // Rosa chiclete para toques especiais
+$highlight: #6c5ce7; // Roxo vibrante pra destacar o que importa
 
-$dark      : #1D1D1D;
-$dark-page : #121212;
-
-$positive  : #21BA45;
-$negative  : #C10015;
-$info      : #31CCEC;
-$warning   : #F2C037;
+// Sugestão: emojis e microinterações podem ajudar no tom bem-humorado 😄
+// Exemplo de uso: borda neon no botão de salvar, ícone piscando, etc.

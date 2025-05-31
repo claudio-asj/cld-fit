@@ -1,9 +1,35 @@
+
+
 const routes = [
   {
     path: '/',
+    name: 'login',
+    component: () => import('pages/LoginPage.vue'),
+  },
+  {
+    path: '/menu',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/IndexPage.vue') }
+      {
+        path: '',
+        name: 'index',
+        component: () => import('pages/IndexPage.vue'),
+      },
+      {
+        path: 'exercicio',
+        name: 'exercicio',
+        component: () => import('pages/ExercisesPage.vue'),
+      },
+      {
+        path: 'serie',
+        name: 'serie',
+        component: () => import('pages/SeriePage.vue'),
+      },
+      {
+        path: 'santinho',
+        name: 'santinho',
+        component: () => import('pages/SantoSetup.vue'),
+      }
     ]
   },
 
