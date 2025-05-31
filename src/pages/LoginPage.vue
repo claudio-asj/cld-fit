@@ -5,7 +5,7 @@
       :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-white'"
       style="max-width: 420px; width: 100%"
     >
-      <q-img src="/src/assets/logo.png" style="width: 100%" />
+      <q-img src="/logo.png" style="width: 100%" />
 
       <h1 class="text-h5 text-center q-mb-sm">Olá! 👋</h1>
       <h2 class="text-subtitle1 text-center text-grey-8 q-mb-lg">
