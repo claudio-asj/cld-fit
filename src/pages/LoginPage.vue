@@ -7,7 +7,7 @@
     >
       <q-img src="/logo.png" style="width: 100%" />
 
-      <h1 class="text-h5 text-center q-mb-sm">Olá! 👋</h1>
+      <h1 class="text-h5 text-center">Olá! 👋</h1>
       <h2 class="text-subtitle1 text-center text-grey-8 q-mb-lg">
         Me conta seu nome pra gente começar!
       </h2>
@@ -23,11 +23,12 @@
       />
 
       <q-btn
-        label="Bora Treinar! 💪"
+        label="Bora Treinar!"
         color="primary"
         class="full-width q-mb-sm"
         unelevated
         rounded
+        size="lg"
         @click="login"
       />
     </div>
@@ -48,6 +49,30 @@
       </q-banner>
     </transition>
   </div>
+
+  <q-dialog v-model="showModal">
+    <q-card class="q-pa-md" style="max-width: 400px; width: 100%">
+      <q-img src="/construcao.png" alt="Desenvolvimento" class="q-mb-md" />
+      <q-card-section>
+        <div class="text-h6 text-center">🚧 Em desenvolvimento</div>
+        <div class="text-body4 q-mt-sm text-center">
+          Este app ainda está em fase de construção. Se tiver sugestões ou quiser ajudar, entre em
+          contato!
+        </div>
+      </q-card-section>
+
+      <q-card-actions align="center">
+        <q-btn label="Voltar" color="red-8" @click="showModal = false" />
+        <q-btn
+          label="Fale comigo"
+          color="green"
+          unelevated
+          href="https://wa.me/5521979317341"
+          target="_blank"
+        />
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
 </template>
 
 <script setup>
@@ -59,6 +84,8 @@ const $q = useQuasar()
 const router = useRouter()
 const username = ref('')
 const showBanner = ref(false)
+
+const showModal = ref(true)
 
 onMounted(() => {
   const savedUser = localStorage.getItem('username')
@@ -107,7 +134,7 @@ function login() {
 
 .cookie-banner {
   position: fixed;
-  bottom: 12px;
+  top: 12px;
   left: 12px;
   right: 12px;
   border-radius: 12px;

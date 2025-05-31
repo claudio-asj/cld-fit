@@ -55,6 +55,13 @@
 
         <q-separator class="q-my-md" />
 
+        <q-item clickable v-ripple v-if="canInstall" @click="installPWA">
+          <q-item-section avatar>
+            <q-icon name="download" />
+          </q-item-section>
+          <q-item-section> Instalar </q-item-section>
+        </q-item>
+
         <q-item clickable v-ripple @click="logout">
           <q-item-section avatar>
             <q-icon name="logout" />
@@ -127,6 +134,8 @@ const router = useRouter()
 const leftDrawerOpen = ref(false)
 const username = ref('')
 const santinho = ref(1)
+const deferredPrompt = ref(null)
+const canInstall = ref(false)
 
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value
@@ -150,11 +159,36 @@ function logout() {
   router.replace({ name: 'login' })
 }
 
+const installPWA = async () => {
+  if (!deferredPrompt.value) return
+
+  const promptEvent = deferredPrompt.value
+  promptEvent.prompt()
+
+  const choiceResult = await promptEvent.userChoice
+  if (choiceResult.outcome === 'accepted') {
+    console.log('Usuário aceitou instalar o PWA')
+  } else {
+    console.log('Usuário recusou instalar o PWA')
+  }
+
+  deferredPrompt.value = null
+  canInstall.value = false
+}
+
 onMounted(() => {
   const savedUser = localStorage.getItem('username')
   if (savedUser) {
     username.value = savedUser
   }
+
   santinho.value = localStorage.getItem('santoSetupDone') === 'true'
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault()
+    deferredPrompt.value = e
+    canInstall.value = true
+    console.log('beforeinstallprompt disparado e armazenado.')
+  })
 })
 </script>

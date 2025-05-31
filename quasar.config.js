@@ -182,7 +182,7 @@ export default defineConfig((/* ctx */) => {
       builder: {
         // https://www.electron.build/configuration/configuration
 
-        appId: 'cld-fit'
+        appId: 'CLDfit'
       }
     },
 
