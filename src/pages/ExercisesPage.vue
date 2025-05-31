@@ -1,9 +1,14 @@
 <template>
   <q-page class="q-pa-md">
-    <q-btn label="Cadastrar Exercício" color="primary" @click="showDialog = true" class="q-mb-md" />
+    <q-btn label="Cadastrar Exercício" color="primary" @click="openCreateDialog" class="q-mb-md" />
 
     <q-list bordered>
-      <q-item v-for="exercise in exercises" :key="exercise.id">
+      <q-item
+        v-for="exercise in exercises"
+        :key="exercise.id"
+        clickable
+        @click="openEditDialog(exercise)"
+      >
         <q-item-section avatar>
           <q-avatar square>
             <img :src="exercise.image" alt="imagem" />
@@ -14,14 +19,18 @@
           <q-item-label>{{ exercise.name }}</q-item-label>
           <q-item-label caption>Músculo alvo: {{ exercise.muscle }}</q-item-label>
         </q-item-section>
+
+        <q-item-section side>
+          <q-btn flat icon="delete" color="negative" @click.stop="deleteExercise(exercise.id)" />
+        </q-item-section>
       </q-item>
     </q-list>
 
-    <!-- Modal para cadastrar novo exercício -->
+    <!-- Modal de Cadastro/Edição -->
     <q-dialog v-model="showDialog">
       <q-card style="min-width: 300px">
         <q-card-section>
-          <div class="text-h6">Novo Exercício</div>
+          <div class="text-h6">{{ isEditing ? 'Editar Exercício' : 'Novo Exercício' }}</div>
         </q-card-section>
 
         <q-card-section class="q-gutter-md">
@@ -39,12 +48,12 @@
 
         <q-card-actions align="right">
           <q-btn flat label="Cancelar" v-close-popup />
-          <q-btn label="Salvar" color="primary" @click="addExercise" />
+          <q-btn label="Salvar" color="primary" @click="saveExercise" />
         </q-card-actions>
       </q-card>
     </q-dialog>
 
-    <!-- Modal onboarding com carrossel -->
+    <!-- Onboarding -->
     <q-dialog v-model="showOnboarding" persistent>
       <q-card>
         <q-carousel
@@ -89,6 +98,8 @@ import { ref, onMounted } from 'vue'
 
 const showDialog = ref(false)
 const showOnboarding = ref(false)
+const isEditing = ref(false)
+const editingId = ref(null)
 const slide = ref(0)
 
 const form = ref({
@@ -121,7 +132,6 @@ function loadFromStorage() {
     exercises.value = JSON.parse(data)
   }
   if (exercises.value.length === 0) {
-    // abre modal onboarding se não tem exercício
     showOnboarding.value = true
   }
 }
@@ -130,20 +140,46 @@ function saveToStorage() {
   localStorage.setItem('exercises', JSON.stringify(exercises.value))
 }
 
-function addExercise() {
+function openCreateDialog() {
+  isEditing.value = false
+  form.value = { name: '', muscle: '', image: '' }
+  showDialog.value = true
+}
+
+function openEditDialog(exercise) {
+  isEditing.value = true
+  editingId.value = exercise.id
+  form.value = { name: exercise.name, muscle: exercise.muscle, image: exercise.image }
+  showDialog.value = true
+}
+
+function saveExercise() {
   if (!form.value.name || !form.value.muscle || !form.value.image) return
 
-  exercises.value.push({
-    id: generateId(),
-    name: form.value.name,
-    muscle: form.value.muscle,
-    image: form.value.image,
-  })
+  if (isEditing.value) {
+    const index = exercises.value.findIndex((e) => e.id === editingId.value)
+    if (index !== -1) {
+      exercises.value[index] = { id: editingId.value, ...form.value }
+    }
+  } else {
+    exercises.value.push({
+      id: generateId(),
+      name: form.value.name,
+      muscle: form.value.muscle,
+      image: form.value.image,
+    })
+  }
 
   saveToStorage()
-
-  form.value = { name: '', muscle: '', image: '' }
   showDialog.value = false
+  form.value = { name: '', muscle: '', image: '' }
+  editingId.value = null
+  isEditing.value = false
+}
+
+function deleteExercise(id) {
+  exercises.value = exercises.value.filter((e) => e.id !== id)
+  saveToStorage()
 }
 
 const onboardingSlides = [
@@ -164,8 +200,7 @@ const onboardingSlides = [
   },
   {
     title: 'Link da Imagem',
-    description:
-      'Use um LINK direto para a imagem do exercício (não é upload). Por exemplo, imagens hospedadas na internet.',
+    description: 'Use um link direto para a imagem do exercício (não é upload).',
     image: 'https://cdn-icons-png.flaticon.com/512/2076/2076655.png',
   },
 ]

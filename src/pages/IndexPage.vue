@@ -15,8 +15,9 @@
       <div
         v-for="(exercicioItem, index) in serieSelecionada.exercicios"
         :key="index"
-        class="q-pa-md rounded shadow-2 row items-center q-gutter-sm cursor-pointer"
+        class="q-pa-sm rounded shadow-2 row items-center q-gutter-sm cursor-pointer"
         :class="{ feito: exercicioItem.feito }"
+        @click="exercicioItem.feito = !exercicioItem.feito"
       >
         <q-checkbox
           v-model="exercicioItem.feito"
@@ -27,12 +28,14 @@
           keep-color
         />
         <div class="col">
-          <div class="text-h6">
+          <div style="font-size: 24px; line-height: 24px; font-weight: bold">
             {{ getExercicioNome(exercicioItem.exercicio) || 'Exercício não encontrado' }}
           </div>
-          <div>Carga: {{ exercicioItem.carga ?? '-' }} kg</div>
-          <div>Repetições: {{ exercicioItem.repeticoes ?? '-' }}</div>
-          <div>Séries: {{ exercicioItem.series ?? '-' }}</div>
+          <div>
+            <q-icon name="fitness_center" /> {{ exercicioItem.carga }}Kg &nbsp; | &nbsp;
+            <q-icon name="tag" /> {{ exercicioItem.series }}x{{ exercicioItem.repeticoes }}
+          </div>
+          <div v-if="exercicioItem.obs">Obs: {{ exercicioItem.obs }}</div>
         </div>
         <q-img
           v-if="getExercicioImagem(exercicioItem.exercicio)"
@@ -46,20 +49,31 @@
     </div>
 
     <q-dialog v-model="modalAberto" persistent maximized>
-      <q-card class="bg-transparent shadow-none">
+      <q-card
+        class="bg-transparent shadow-none"
+        style="
+          max-width: 100%;
+          max-height: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+        "
+      >
         <q-img :src="imagemModal" class="full-width" contain />
         <q-btn
           icon="close"
-          color="white"
+          label="fechar"
+          color="primary"
           flat
           round
           dense
-          class="absolute-top-right q-mt-md q-mr-md"
           @click="modalAberto = false"
         />
       </q-card>
     </q-dialog>
   </q-page>
+
   <q-page padding v-else>
     <div class="text-center text-h4">
       <q-img
@@ -89,8 +103,9 @@ onMounted(() => {
   const seriesStorage = localStorage.getItem('series')
   if (seriesStorage) {
     const listaSeries = JSON.parse(seriesStorage)
-    // Adiciona prop 'feito' para controle visual, não persistente
+    // Aqui mantemos o 'nome' da série e adicionamos o feito nos exercícios
     series.value = listaSeries.map((serie) => ({
+      nome: serie.nome, // importante ter o nome aqui
       exercicios: serie.exercicios.map((ex) => ({
         ...ex,
         feito: false,
@@ -108,8 +123,8 @@ onMounted(() => {
 })
 
 const seriesOptions = computed(() =>
-  series.value.map((_, i) => ({
-    label: `Série ${i + 1}`,
+  series.value.map((serie, i) => ({
+    label: serie.nome || `Série ${i + 1}`, // mostra o nome salvo ou fallback
     value: i,
   }))
 )

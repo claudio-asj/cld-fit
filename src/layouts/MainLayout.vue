@@ -62,7 +62,7 @@
           <q-item-section avatar>
             <q-icon name="download" />
           </q-item-section>
-          <q-item-section> Instalar </q-item-section>
+          <q-item-section> Instalar o aplicativo </q-item-section>
         </q-item>
 
         <q-item clickable v-ripple @click="logout">
@@ -77,52 +77,88 @@
     <q-page-container>
       <router-view />
     </q-page-container>
-
+    <!-- FOOTER -->
     <q-footer
       class="text-white q-pa-md"
       style="background: linear-gradient(135deg, #ff9ff3, #70a1ff)"
     >
       <div class="text-center">
         <div class="text-subtitle2 q-mb-sm">
-          Desenvolvido com <span class="text-bold">💙</span> por <strong>ClaudioJr</strong>
+          Desenvolvido com <span class="text-bold">💙</span> por
+          <q-btn
+            flat
+            dense
+            @click="showAboutDialog = true"
+            class="text-white text-weight-bold"
+            style="text-decoration: underline"
+          >
+            ClaudioJr
+          </q-btn>
         </div>
-        <div class="row justify-center q-gutter-sm">
-          <q-btn
-            flat
-            rounded
-            dense
-            icon="code"
-            label="GitHub"
-            color="white"
-            text-color="black"
-            href="https://github.com/claudio-asj"
-            target="_blank"
-          />
-          <q-btn
-            flat
-            rounded
-            dense
-            icon="business"
-            label="LinkedIn"
-            color="white"
-            text-color="black"
-            href="https://linkedin.com/in/claudio-junior-537319162"
-            target="_blank"
-          />
-          <q-btn
-            flat
-            rounded
-            dense
-            icon="photo_camera"
-            label="Instagram"
-            color="white"
-            text-color="black"
-            href="https://instagram.com/claudio_almeida"
-            target="_blank"
-          />
-        </div>
+        <q-btn
+          unelevated
+          flat
+          icon="share"
+          label="Compartilhar"
+          text-color="primary"
+          @click="shareApp"
+        />
       </div>
     </q-footer>
+
+    <!-- MODAL -->
+    <q-dialog v-model="showAboutDialog">
+      <q-card style="max-width: 400px; width: 90vw">
+        <q-card-section class="row items-center q-pb-none">
+          <q-avatar size="80px" class="q-mr-md">
+            <img src="/claudio.png" alt="Claudio Jr" />
+          </q-avatar>
+          <div>
+            <div class="text-h6">Claudio Jr</div>
+            <div class="text-subtitle2">Desenvolvedor do CLDfit</div>
+          </div>
+        </q-card-section>
+
+        <q-card-section class="q-pt-none q-mt-lg">
+          <div class="row justify-center q-gutter-sm">
+            <q-btn
+              flat
+              rounded
+              dense
+              icon="code"
+              label="GitHub"
+              color="primary"
+              href="https://github.com/claudio-asj"
+              target="_blank"
+            />
+            <q-btn
+              flat
+              rounded
+              dense
+              icon="business"
+              label="LinkedIn"
+              color="primary"
+              href="https://linkedin.com/in/claudio-junior-537319162"
+              target="_blank"
+            />
+            <q-btn
+              flat
+              rounded
+              dense
+              icon="photo_camera"
+              label="Instagram"
+              color="primary"
+              href="https://instagram.com/claudio_almeida"
+              target="_blank"
+            />
+          </div>
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn flat icon="close" label="Fechar" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-layout>
 </template>
 
@@ -139,6 +175,7 @@ const username = ref('')
 const santinho = ref(1)
 const deferredPrompt = ref(null)
 const canInstall = ref(false)
+const showAboutDialog = ref(false)
 
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value
@@ -177,6 +214,26 @@ const installPWA = async () => {
 
   deferredPrompt.value = null
   canInstall.value = false
+}
+
+const shareApp = async () => {
+  try {
+    if (navigator.share) {
+      await navigator.share({
+        title: 'CLDfit',
+        text: 'Confira o app de treino CLDfit!',
+        url: 'https://cld-fit.vercel.app',
+      })
+    } else {
+      $q.notify({
+        type: 'warning',
+        message: 'Compartilhamento não suportado neste dispositivo.',
+      })
+    }
+  } catch (err) {
+    console.error('Erro ao compartilhar:', err)
+    $q.notify({ type: 'negative', message: 'Erro ao compartilhar' })
+  }
 }
 
 onMounted(() => {

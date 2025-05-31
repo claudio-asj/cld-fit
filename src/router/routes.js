@@ -5,10 +5,12 @@ const routes = [
     path: '/',
     name: 'login',
     component: () => import('pages/LoginPage.vue'),
+    meta: { title: 'CLDfit' }
   },
   {
     path: '/menu',
     component: () => import('layouts/MainLayout.vue'),
+    meta: { title: 'CLDfit' },
     children: [
       {
         path: '',

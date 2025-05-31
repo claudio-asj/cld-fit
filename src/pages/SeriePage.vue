@@ -1,102 +1,137 @@
 <template>
-  <q-page padding v-if="exercicios.length > 0">
-    <q-btn label="Adicionar Série" color="primary" @click="adicionarSerie" class="q-mb-md" />
-
-    <q-tabs v-model="tab" dense active-color="primary" indicator-color="primary" align="left">
-      <q-tab
-        v-for="(s, index) in series"
-        :key="s.id"
-        :name="`serie-${s.id}`"
-        :label="`Série ${index + 1}`"
-      />
-    </q-tabs>
-
-    <q-separator />
-
-    <div
-      v-for="(serie, index) in series"
-      :key="serie.id"
-      v-show="tab === `serie-${serie.id}`"
-      class="q-pa-md"
-    >
-      <div
-        v-for="(exercicioItem, i) in serie.exercicios"
-        :key="i"
-        class="row items-center q-gutter-sm q-mb-md"
-      >
-        <q-select
-          v-model="exercicioItem.exercicio"
-          :options="exercicios"
-          label="Exercício"
-          dense
-          class="col-4"
-          emit-value
-          map-options
-        />
-        <q-input
-          v-model="exercicioItem.carga"
-          label="Carga (kg)"
-          type="number"
-          dense
-          class="col-2"
-        />
-        <q-input
-          v-model="exercicioItem.repeticoes"
-          label="Repetições"
-          type="number"
-          dense
-          class="col-2"
-        />
-        <q-input v-model="exercicioItem.series" label="Séries" type="number" dense class="col-2" />
-        <q-input
-          v-model="exercicioItem.obs"
-          label="Observações"
-          dense
-          class="col-8 q-mt-sm"
-          type="text"
-          autogrow
-          placeholder="Anotações sobre o exercício"
-        />
-        <q-btn
-          dense
-          round
-          icon="delete"
-          color="negative"
-          class="col-1 q-mt-sm"
-          @click="removerExercicio(index, i)"
-          flat
-        />
+  <q-page padding>
+    <div v-if="exercicios.length > 0">
+      <div class="row justify-between items-center q-mb-md">
+        <div class="text-h6">Minhas séries</div>
+        <q-btn label="Adicionar Série" color="primary" icon="add" @click="adicionarSerie" />
       </div>
 
-      <div class="row q-gutter-sm">
-        <q-btn
-          dense
-          label="Adicionar Exercício"
-          icon="add"
-          color="secondary"
-          @click="adicionarExercicio(index)"
+      <q-tabs
+        v-model="tab"
+        dense
+        active-color="primary"
+        indicator-color="primary"
+        align="left"
+        class="q-mb-md"
+      >
+        <q-tab
+          v-for="(s, index) in series"
+          :key="s.id"
+          :name="`serie-${s.id}`"
+          :label="s.nome ? s.nome : `Série ${index + 1}`"
         />
-        <q-btn
-          dense
-          label="Salvar Série"
-          icon="save"
-          color="positive"
-          @click="salvarSerie(index)"
-        />
+      </q-tabs>
+
+      <q-separator />
+
+      <div
+        v-for="(serie, index) in series"
+        :key="serie.id"
+        v-show="tab === `serie-${serie.id}`"
+        class="q-mt-md"
+      >
+        <q-card flat bordered class="q-pa-md q-mb-xl shadow-2">
+          <q-input
+            v-model="serie.nome"
+            label="Nome da Série"
+            dense
+            class="q-mb-md"
+            placeholder="Ex: Segunda-feira - Peito e Tríceps"
+          />
+
+          <div class="text-subtitle1 text-primary q-mb-sm">
+            {{ serie.nome ? serie.nome : `Série ${index + 1}` }}
+          </div>
+
+          <div v-for="(exercicioItem, i) in serie.exercicios" :key="i" class="q-mb-md">
+            <q-card flat bordered class="bg-grey-2 q-pa-sm">
+              <div class="row items-start q-col-gutter-sm">
+                <q-select
+                  v-model="exercicioItem.exercicio"
+                  :options="exercicios"
+                  label="Exercício"
+                  dense
+                  emit-value
+                  map-options
+                  class="col-10"
+                />
+
+                <q-btn
+                  dense
+                  flat
+                  round
+                  icon="delete"
+                  color="negative"
+                  class="col-auto q-mt-sm"
+                  @click="removerExercicio(index, i)"
+                />
+              </div>
+
+              <div class="row q-col-gutter-sm q-mt-sm">
+                <q-input
+                  v-model="exercicioItem.carga"
+                  label="Carga (kg)"
+                  type="number"
+                  dense
+                  class="col-4"
+                />
+                <q-input
+                  v-model="exercicioItem.series"
+                  label="Séries"
+                  type="number"
+                  dense
+                  class="col-4"
+                />
+                <q-input
+                  v-model="exercicioItem.repeticoes"
+                  label="Repetições"
+                  type="number"
+                  dense
+                  class="col-4"
+                />
+              </div>
+
+              <q-input
+                v-model="exercicioItem.obs"
+                label="Observações"
+                dense
+                type="textarea"
+                autogrow
+                class="q-mt-sm"
+                placeholder="Anotações sobre o exercício"
+              />
+            </q-card>
+          </div>
+
+          <div class="row q-gutter-sm justify-end">
+            <q-btn
+              dense
+              label="Adicionar Exercício"
+              icon="add"
+              color="secondary"
+              @click="adicionarExercicio(index)"
+            />
+            <q-btn
+              dense
+              label="Salvar Série"
+              icon="save"
+              color="positive"
+              @click="salvarSerie(index)"
+            />
+          </div>
+        </q-card>
       </div>
     </div>
-  </q-page>
-  <q-page padding v-else>
-    <div class="text-center text-h4">
+
+    <div v-else class="q-mt-xl text-center">
       <q-img
         src="https://i.gifer.com/40Oj.gif"
-        class="q-mb-md"
         style="max-width: 200px; margin: auto"
         alt="Nenhuma Série"
+        class="q-mb-md"
       />
-      <br />
-      Nenhuma exercício encontrado. Adicione um exercício para começar.
-      <br />
+      <div class="text-h6 q-mb-sm">Nenhum exercício encontrado</div>
+      <div class="text-subtitle2">Adicione um exercício para começar.</div>
       <q-btn label="Adicionar Exercícios" color="primary" to="/menu/exercicio" class="q-mt-md" />
     </div>
   </q-page>
@@ -137,19 +172,21 @@ onMounted(() => {
 })
 
 function salvarSerie(index) {
-  // filtra exercícios válidos antes de salvar
   const serie = series.value[index]
   const exerciciosValidos = serie.exercicios.filter((ex) => ex.exercicio)
+
   serie.exercicios =
     exerciciosValidos.length > 0
       ? exerciciosValidos
       : [{ exercicio: null, carga: null, repeticoes: null, series: null, obs: '' }]
+
   localStorage.setItem('series', JSON.stringify(series.value))
 }
 
 function adicionarSerie() {
   const novaSerie = {
     id: gerarId(),
+    nome: '',
     exercicios: [
       {
         exercicio: null,
