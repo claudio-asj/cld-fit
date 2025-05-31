@@ -186,22 +186,22 @@ const onboardingSlides = [
   {
     title: 'Bem-vindo!',
     description: 'Vamos te mostrar como cadastrar um exercício para acompanhar seu treino.',
-    image: 'https://cdn-icons-png.flaticon.com/512/709/709496.png',
+    image: '/logofundo.png',
   },
   {
     title: 'Nome do Exercício',
     description: 'Dê um nome claro e fácil de identificar para o exercício.',
-    image: 'https://cdn-icons-png.flaticon.com/512/1256/1256650.png',
+    image: '/peso.png',
   },
   {
     title: 'Músculo Alvo',
     description: 'Selecione o músculo que será trabalhado para organizar melhor seus treinos.',
-    image: 'https://cdn-icons-png.flaticon.com/512/616/616408.png',
+    image: '/logofundo.png',
   },
   {
     title: 'Link da Imagem',
     description: 'Use um link direto para a imagem do exercício (não é upload).',
-    image: 'https://cdn-icons-png.flaticon.com/512/2076/2076655.png',
+    image: '/logofundo.png',
   },
 ]
 

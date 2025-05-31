@@ -78,13 +78,13 @@
     <div class="text-center text-h4">
       <q-img
         src="https://i.gifer.com/40Oj.gif"
-        class="q-mb-md"
         style="max-width: 200px; margin: auto"
         alt="Nenhuma Série"
+        class="q-mb-md"
       />
-      <br />
-      Nenhuma série encontrada. Por favor, adicione séries para começar. <br />
-      <q-btn to="/menu/serie" color="primary" class="q-mt-md" label="Adicionar Série" />
+      <div class="text-h6 q-mb-sm">Nenhuma série encontrada</div>
+      <div class="text-subtitle2">Adicione uma série para começar.</div>
+      <q-btn label="Adicionar Exercícios" color="primary" to="/menu/exercicio" class="q-mt-md" />
     </div>
   </q-page>
 </template>

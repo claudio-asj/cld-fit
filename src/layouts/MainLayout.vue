@@ -78,19 +78,16 @@
       <router-view />
     </q-page-container>
     <!-- FOOTER -->
-    <q-footer
-      class="text-white q-pa-md"
-      style="background: linear-gradient(135deg, #ff9ff3, #70a1ff)"
-    >
+    <q-footer class="text-white" style="background: linear-gradient(135deg, #ff9ff3, #70a1ff)">
       <div class="text-center">
-        <div class="text-subtitle2 q-mb-sm">
+        <div class="text-subtitle">
           Desenvolvido com <span class="text-bold">💙</span> por
           <q-btn
             flat
             dense
+            no-caps=""
             @click="showAboutDialog = true"
             class="text-white text-weight-bold"
-            style="text-decoration: underline"
           >
             ClaudioJr
           </q-btn>
@@ -114,8 +111,8 @@
             <img src="/claudio.png" alt="Claudio Jr" />
           </q-avatar>
           <div>
-            <div class="text-h6">Claudio Jr</div>
-            <div class="text-subtitle2">Desenvolvedor do CLDfit</div>
+            <div class="text-primary text-bold" style="font-size: 32px">Claudio Jr</div>
+            <div class="text-subtitle">Desenvolvedor do CLDfit</div>
           </div>
         </q-card-section>
 
