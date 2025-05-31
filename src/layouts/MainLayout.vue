@@ -23,7 +23,10 @@
 
     <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
       <q-list padding>
-        <q-item-label header class="text-h6 q-mb-md"> Menu CLDfit </q-item-label>
+        <q-item-label header class="text-h6 q-mb-md">
+          <q-img src="/logo.png" alt="Logo imagem" width="40px" />
+          Menu CLDfit
+        </q-item-label>
 
         <q-item clickable v-ripple @click="goTo('index')">
           <q-item-section avatar>
