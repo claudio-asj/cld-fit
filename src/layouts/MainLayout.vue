@@ -3,11 +3,12 @@
     <q-header>
       <q-toolbar>
         <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
-        <q-toolbar-title>CLDfit</q-toolbar-title>
-
-        <div v-if="username" class="q-mr-md">
-          Olá, <strong>{{ username }}</strong>
-        </div>
+        <q-toolbar-title>
+          <div header class="text-h6 q-mb-none text-white">
+            <q-img src="/logo.png" alt="Logo imagem" width="40px" />
+            CLDfit
+          </div>
+        </q-toolbar-title>
 
         <q-btn
           dense
@@ -23,10 +24,11 @@
 
     <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
       <q-list padding>
-        <q-item-label header class="text-h6 q-mb-md">
-          <q-img src="/logo.png" alt="Logo imagem" width="40px" />
-          Menu CLDfit
-        </q-item-label>
+        <q-item-label header class="text-h6 text-primary q-mb-md">
+          <div v-if="username" class="q-mr-md">
+            👋 Olá, <strong>{{ username }}</strong>
+          </div></q-item-label
+        >
 
         <q-item clickable v-ripple @click="goTo('index')">
           <q-item-section avatar>
@@ -64,7 +66,6 @@
           </q-item-section>
           <q-item-section> Instalar o aplicativo </q-item-section>
         </q-item>
-
         <q-item clickable v-ripple @click="logout">
           <q-item-section avatar>
             <q-icon name="logout" />

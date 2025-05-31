@@ -84,7 +84,7 @@
       />
       <div class="text-h6 q-mb-sm">Nenhuma série encontrada</div>
       <div class="text-subtitle2">Adicione uma série para começar.</div>
-      <q-btn label="Adicionar Exercícios" color="primary" to="/menu/exercicio" class="q-mt-md" />
+      <q-btn label="Adicionar Série" color="primary" to="/menu/serie" class="q-mt-md" />
     </div>
   </q-page>
 </template>

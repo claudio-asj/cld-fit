@@ -118,6 +118,14 @@
               color="positive"
               @click="salvarSerie(index)"
             />
+            <q-btn
+              dense
+              flat
+              label="Excluir Série"
+              icon="delete"
+              color="negative"
+              @click="removerSerie(index)"
+            />
           </div>
         </q-card>
       </div>
@@ -134,6 +142,19 @@
       <div class="text-subtitle2">Adicione um exercício para começar.</div>
       <q-btn label="Adicionar Exercícios" color="primary" to="/menu/exercicio" class="q-mt-md" />
     </div>
+
+    <!-- Modal de confirmação -->
+    <q-dialog v-model="dialogSalvo">
+      <q-card>
+        <q-card-section class="row items-center">
+          <q-icon name="check_circle" color="positive" size="md" class="q-mr-sm" />
+          <div class="text-subtitle1">Série salva com sucesso!</div>
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn flat label="OK" color="primary" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
@@ -142,8 +163,8 @@ import { ref, onMounted } from 'vue'
 
 const tab = ref(null)
 const series = ref([])
-
 const exercicios = ref([])
+const dialogSalvo = ref(false)
 
 function gerarId() {
   return Date.now() + Math.floor(Math.random() * 1000)
@@ -181,6 +202,7 @@ function salvarSerie(index) {
       : [{ exercicio: null, carga: null, repeticoes: null, series: null, obs: '' }]
 
   localStorage.setItem('series', JSON.stringify(series.value))
+  dialogSalvo.value = true
 }
 
 function adicionarSerie() {
@@ -214,5 +236,15 @@ function adicionarExercicio(serieIndex) {
 
 function removerExercicio(serieIndex, exercicioIndex) {
   series.value[serieIndex].exercicios.splice(exercicioIndex, 1)
+}
+
+function removerSerie(index) {
+  series.value.splice(index, 1)
+  if (series.value.length > 0) {
+    tab.value = `serie-${series.value[0].id}`
+  } else {
+    tab.value = null
+  }
+  localStorage.setItem('series', JSON.stringify(series.value))
 }
 </script>
