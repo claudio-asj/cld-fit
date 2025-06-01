@@ -31,6 +31,11 @@ const routes = [
         path: 'santinho',
         name: 'santinho',
         component: () => import('pages/SantoSetup.vue'),
+      },
+      {
+        path: 'treino',
+        name: 'treino',
+        component: () => import('pages/TreinoPage.vue'),
       }
     ]
   },

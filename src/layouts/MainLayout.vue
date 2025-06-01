@@ -58,6 +58,13 @@
           <q-item-section> Santinho </q-item-section>
         </q-item>
 
+        <q-item clickable v-ripple @click="goTo('treino')">
+          <q-item-section avatar>
+            <q-icon name="auto_fix_high" />
+          </q-item-section>
+          <q-item-section> Registrar Treino </q-item-section>
+        </q-item>
+
         <q-separator class="q-my-md" />
 
         <q-item clickable v-ripple v-if="canInstall" @click="installPWA">
