@@ -1,12 +1,14 @@
 <template>
   <q-page padding v-if="series.length > 0">
+    <div>
+      <SemanaTreino />
+    </div>
     <q-select
       v-model="serieSelecionadaIndex"
       :options="seriesOptions"
       label="Selecione a Série"
-      dense
       outlined
-      class="q-mb-md"
+      class="q-mb-md q-mt-lg"
       emit-value
       map-options
     />
@@ -91,6 +93,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import SemanaTreino from 'components/SemanaTreino.vue'
 
 const series = ref([])
 const exercicios = ref([])
