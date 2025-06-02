@@ -11,16 +11,18 @@
       <!-- AVALIAÇÕES -->
       <q-tab-panel name="avaliacoes">
         <div class="q-mt-md">
-          <q-btn label="Nova Avaliação" color="primary" @click="abrirModal = true" />
+          <q-btn label="Nova Avaliação" color="primary" @click="abrirModalParaNova" />
 
           <q-dialog v-model="abrirModal" persistent>
             <q-card style="min-width: 90vw; max-height: 90vh; overflow-y: auto">
               <q-card-section>
-                <div class="text-h6">Nova Avaliação</div>
+                <div class="text-h6">
+                  {{ avaliacaoEditando === null ? 'Nova Avaliação' : 'Editar Avaliação' }}
+                </div>
               </q-card-section>
 
               <q-card-section>
-                <q-form @submit.prevent="adicionarAvaliacao">
+                <q-form @submit.prevent="salvarAvaliacao">
                   <q-input v-model="novaAvaliacao.dia" label="Data" readonly />
                   <q-input v-model.number="novaAvaliacao.peso" label="Peso (kg)" type="number" />
                   <q-input
@@ -47,7 +49,14 @@
                   </div>
 
                   <q-card-actions align="right" class="q-mt-md">
-                    <q-btn label="Cancelar" flat @click="abrirModal = false" />
+                    <q-btn label="Cancelar" flat @click="fecharModal" />
+                    <q-btn
+                      v-if="avaliacaoEditando !== null"
+                      label="Deletar"
+                      color="negative"
+                      flat
+                      @click="deletarAvaliacao"
+                    />
                     <q-btn label="Salvar" color="primary" type="submit" />
                   </q-card-actions>
                 </q-form>
@@ -63,6 +72,7 @@
                 <div>Peso: {{ a.peso }} kg</div>
                 <div>Altura: {{ a.altura }} cm</div>
                 <div v-if="a.percentualGordura">% Gordura: {{ a.percentualGordura }}%</div>
+                <q-btn dense flat icon="edit" label="Editar" @click="abrirModalParaEditar(index)" />
               </q-card-section>
             </q-card>
           </div>
@@ -103,9 +113,9 @@ export default {
   setup() {
     const abaAtiva = ref('avaliacoes')
     const abrirModal = ref(false)
+    const avaliacaoEditando = ref(null) // índice da avaliação que está sendo editada
 
     const labelsCircunferencias = {
-      pescoco: 'Pescoço',
       ombros: 'Ombros',
       torax: 'Tórax / Peitoral',
       bracoDireito: 'Braço Direito',
@@ -113,7 +123,7 @@ export default {
       antebracoDireito: 'Antebraço Direito',
       antebracoEsquerdo: 'Antebraço Esquerdo',
       cintura: 'Cintura',
-      abdomen: 'Abdômen',
+      gluteos: 'Glúteos',
       quadril: 'Quadril',
       coxaDireita: 'Coxa Direita',
       coxaEsquerda: 'Coxa Esquerda',
@@ -140,10 +150,8 @@ export default {
       if (data) avaliacoes.value = JSON.parse(data)
     }
 
-    const adicionarAvaliacao = () => {
-      avaliacoes.value.push({ ...novaAvaliacao.value })
-      salvarLocalStorage()
-      abrirModal.value = false
+    const abrirModalParaNova = () => {
+      avaliacaoEditando.value = null
       novaAvaliacao.value = {
         dia: new Date().toLocaleDateString('pt-BR'),
         peso: null,
@@ -153,6 +161,38 @@ export default {
           Object.keys(labelsCircunferencias).map((k) => [k, null])
         ),
       }
+      abrirModal.value = true
+    }
+
+    const abrirModalParaEditar = (index) => {
+      avaliacaoEditando.value = index
+      novaAvaliacao.value = JSON.parse(JSON.stringify(avaliacoes.value[index])) // clone profundo para evitar ligação direta
+      abrirModal.value = true
+    }
+
+    const salvarAvaliacao = () => {
+      if (avaliacaoEditando.value === null) {
+        // nova avaliação
+        avaliacoes.value.push({ ...novaAvaliacao.value })
+      } else {
+        // editar existente
+        avaliacoes.value[avaliacaoEditando.value] = { ...novaAvaliacao.value }
+      }
+      salvarLocalStorage()
+      fecharModal()
+    }
+
+    const deletarAvaliacao = () => {
+      if (avaliacaoEditando.value !== null) {
+        avaliacoes.value.splice(avaliacaoEditando.value, 1)
+        salvarLocalStorage()
+        fecharModal()
+      }
+    }
+
+    const fecharModal = () => {
+      abrirModal.value = false
+      avaliacaoEditando.value = null
     }
 
     const labelsGrafico = computed(() => avaliacoes.value.map((a) => a.dia))
@@ -164,10 +204,15 @@ export default {
     return {
       abaAtiva,
       abrirModal,
+      avaliacaoEditando,
       labelsCircunferencias,
       novaAvaliacao,
       avaliacoes,
-      adicionarAvaliacao,
+      abrirModalParaNova,
+      abrirModalParaEditar,
+      salvarAvaliacao,
+      deletarAvaliacao,
+      fecharModal,
       labelsGrafico,
       dadosPeso,
       dadosGordura,
