@@ -121,7 +121,7 @@ export default {
         this.treinosFeitos.unshift({
           nome: treinoNome,
           data,
-          imagem: finalImage,
+          // imagem: finalImage,
         })
         localStorage.setItem('treinosFeitos', JSON.stringify(this.treinosFeitos))
 
