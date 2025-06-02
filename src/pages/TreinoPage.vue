@@ -15,7 +15,8 @@
       <div
         v-for="(treino, index) in treinosFeitos"
         :key="index"
-        class="q-pa-sm bg-grey-2 q-mb-sm rounded row items-center justify-between"
+        class="q-pa-sm q-mb-sm row items-center justify-between"
+        style="border: 1px solid #ccc; border-radius: 4px"
       >
         <div>{{ treino.nome }} - {{ treino.data }}</div>
         <q-btn icon="delete" color="negative" dense flat @click="excluirTreinoFeito(index)" />

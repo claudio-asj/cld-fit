@@ -62,7 +62,7 @@
                 <div class="text-h6">Dia: {{ a.dia }}</div>
                 <div>Peso: {{ a.peso }} kg</div>
                 <div>Altura: {{ a.altura }} cm</div>
-                <div>% Gordura: {{ a.percentualGordura }}%</div>
+                <div v-if="a.percentualGordura">% Gordura: {{ a.percentualGordura }}%</div>
               </q-card-section>
             </q-card>
           </div>
