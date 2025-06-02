@@ -72,7 +72,23 @@
                 <div>Peso: {{ a.peso }} kg</div>
                 <div>Altura: {{ a.altura }} cm</div>
                 <div v-if="a.percentualGordura">% Gordura: {{ a.percentualGordura }}%</div>
-                <q-btn dense flat icon="edit" label="Editar" @click="abrirModalParaEditar(index)" />
+                <!-- Linha do IMC -->
+                <div v-if="a.peso && a.altura">
+                  IMC: {{ calcularIMC(a.peso, a.altura).toFixed(2) }}
+                </div>
+                <!-- Linha do IAC -->
+                <div v-if="a.circunferencias && a.circunferencias.quadril && a.altura">
+                  IAC: {{ calcularIAC(a.circunferencias.quadril, a.altura).toFixed(2) }}
+                </div>
+                <div class="row align-center justify-end q-mt-md">
+                  <q-btn
+                    dense
+                    flat
+                    icon="edit"
+                    label="Editar"
+                    @click="abrirModalParaEditar(index)"
+                  />
+                </div>
               </q-card-section>
             </q-card>
           </div>
@@ -195,6 +211,16 @@ export default {
       avaliacaoEditando.value = null
     }
 
+    const calcularIMC = (peso, alturaCm) => {
+      const alturaM = alturaCm / 100
+      return peso / (alturaM * alturaM)
+    }
+
+    const calcularIAC = (circunferenciaQuadrilCm, alturaCm) => {
+      const alturaM = alturaCm / 100
+      return circunferenciaQuadrilCm / (alturaM * Math.sqrt(alturaM)) - 18
+    }
+
     const labelsGrafico = computed(() => avaliacoes.value.map((a) => a.dia))
     const dadosPeso = computed(() => avaliacoes.value.map((a) => a.peso))
     const dadosGordura = computed(() => avaliacoes.value.map((a) => a.percentualGordura))
@@ -202,6 +228,8 @@ export default {
     onMounted(carregarLocalStorage)
 
     return {
+      calcularIMC,
+      calcularIAC,
       abaAtiva,
       abrirModal,
       avaliacaoEditando,
