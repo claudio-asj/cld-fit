@@ -36,6 +36,11 @@ const routes = [
         path: 'treino',
         name: 'treino',
         component: () => import('pages/TreinoPage.vue'),
+      },
+      {
+        path: 'avaliacao',
+        name: 'avaliacao',
+        component: () => import('pages/AvaliacaoPage.vue'),
       }
     ]
   },

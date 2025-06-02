@@ -60,9 +60,16 @@
 
         <q-item clickable v-ripple @click="goTo('treino')">
           <q-item-section avatar>
-            <q-icon name="auto_fix_high" />
+            <q-icon name="photo_camera" />
           </q-item-section>
           <q-item-section> Registrar Treino </q-item-section>
+        </q-item>
+
+        <q-item clickable v-ripple @click="goTo('avaliacao')">
+          <q-item-section avatar>
+            <q-icon name="straighten" />
+          </q-item-section>
+          <q-item-section> Avaliações </q-item-section>
         </q-item>
 
         <q-separator class="q-my-md" />
