@@ -100,16 +100,20 @@
       <!-- GRÁFICOS -->
       <q-tab-panel name="graficos">
         <div v-if="avaliacoes.length">
-          <div class="q-mb-xl">
-            <line-chart :label="'Evolução do Peso'" :labels="labelsGrafico" :dados="dadosPeso" />
-          </div>
-          <div>
-            <line-chart
-              :label="'Evolução do % de Gordura'"
-              :labels="labelsGrafico"
-              :dados="dadosGordura"
-            />
-          </div>
+          <q-select
+            v-model="propriedadeSelecionada"
+            :options="opcoesPropriedades"
+            label="Selecione a propriedade"
+            emit-value
+            map-options
+            class="q-mb-md"
+          />
+
+          <line-chart
+            :label="`Evolução de ${labelPropriedade}`"
+            :labels="labelsGrafico"
+            :dados="dadosGrafico"
+          />
         </div>
         <div v-else class="text-center text-grey">
           Cadastre pelo menos uma avaliação para ver os gráficos.
@@ -141,8 +145,8 @@ export default {
       cintura: 'Cintura',
       gluteos: 'Glúteos',
       quadril: 'Quadril',
-      coxaDireita: 'Coxa Direita',
-      coxaEsquerda: 'Coxa Esquerda',
+      coxaDireita: 'Cocha Direita',
+      coxaEsquerda: 'Cocha Esquerda',
       panturrilhaDireita: 'Panturrilha Direita',
       panturrilhaEsquerda: 'Panturrilha Esquerda',
     }
@@ -221,29 +225,51 @@ export default {
       return circunferenciaQuadrilCm / (alturaM * Math.sqrt(alturaM)) - 18
     }
 
-    const labelsGrafico = computed(() => avaliacoes.value.map((a) => a.dia))
-    const dadosPeso = computed(() => avaliacoes.value.map((a) => a.peso))
-    const dadosGordura = computed(() => avaliacoes.value.map((a) => a.percentualGordura))
+    const opcoesPropriedades = [
+      { label: 'Peso (kg)', value: 'peso' },
+      { label: 'Altura (cm)', value: 'altura' },
+      { label: 'Percentual de Gordura (%)', value: 'percentualGordura' },
+    ]
 
-    onMounted(carregarLocalStorage)
+    const propriedadeSelecionada = ref('peso')
+
+    const labelPropriedade = computed(() => {
+      const opcao = opcoesPropriedades.find((op) => op.value === propriedadeSelecionada.value)
+      return opcao ? opcao.label : ''
+    })
+
+    const dadosGrafico = computed(() =>
+      avaliacoes.value.map((a) => {
+        const valor = a[propriedadeSelecionada.value]
+        return typeof valor === 'number' ? valor : null
+      })
+    )
+
+    const labelsGrafico = computed(() => avaliacoes.value.map((a) => a.dia))
+
+    onMounted(() => {
+      carregarLocalStorage()
+    })
 
     return {
-      calcularIMC,
-      calcularIAC,
       abaAtiva,
       abrirModal,
       avaliacaoEditando,
       labelsCircunferencias,
-      novaAvaliacao,
       avaliacoes,
+      novaAvaliacao,
       abrirModalParaNova,
       abrirModalParaEditar,
       salvarAvaliacao,
       deletarAvaliacao,
       fecharModal,
+      calcularIMC,
+      calcularIAC,
+      opcoesPropriedades,
+      propriedadeSelecionada,
+      labelPropriedade,
+      dadosGrafico,
       labelsGrafico,
-      dadosPeso,
-      dadosGordura,
     }
   },
 }
