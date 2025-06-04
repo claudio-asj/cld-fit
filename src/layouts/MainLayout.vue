@@ -207,6 +207,9 @@ function logout() {
   localStorage.removeItem('exercises')
   localStorage.removeItem('series')
   localStorage.removeItem('santoSetupDone')
+  localStorage.removeItem('treinosFeitos')
+  localStorage.removeItem('diasAcademia')
+  localStorage.removeItem('avaliacoes')
   username.value = ''
   router.replace({ name: 'login' })
 }

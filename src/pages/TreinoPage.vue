@@ -1,5 +1,17 @@
 <template>
   <q-page class="q-pa-md column">
+    <!-- Select do treino -->
+    <q-select
+      v-model="treinoSelecionado"
+      :options="series"
+      option-label="nome"
+      option-value="nome"
+      emit-value
+      map-options
+      label="Selecione o treino"
+      class="q-mb-md"
+    />
+
     <q-btn label="Registrar treino" color="primary" class="q-mb-md" @click="registrarTreino" />
 
     <div v-if="fotoEditada" class="q-my-md">
@@ -72,7 +84,11 @@ export default {
         return
       }
 
-      this.treinoSelecionado = this.series[0] // Pega a primeira por enquanto
+      if (!this.treinoSelecionado) {
+        alert('Por favor, selecione um treino.')
+        return
+      }
+
       this.abrirCamera()
     },
 
@@ -96,8 +112,8 @@ export default {
 
       ctx.drawImage(video, 0, 0, width, height)
 
-      // Textos
-      const treinoNome = this.treinoSelecionado?.nome || 'Treino'
+      // Texto e logo
+      const treinoNome = this.treinoSelecionado
       const data = new Date().toLocaleDateString()
 
       ctx.fillStyle = 'white'
@@ -107,7 +123,6 @@ export default {
       ctx.textBaseline = 'bottom'
       ctx.fillText(`${treinoNome} - ${data}`, 20, height - 20)
 
-      // Logo
       const logo = new Image()
       logo.src = '/logo.png'
       logo.onload = () => {
@@ -118,11 +133,10 @@ export default {
         const finalImage = canvas.toDataURL('image/png')
         this.fotoEditada = finalImage
 
-        // Salva no histórico
+        // Salva histórico
         this.treinosFeitos.unshift({
           nome: treinoNome,
           data,
-          // imagem: finalImage,
         })
         localStorage.setItem('treinosFeitos', JSON.stringify(this.treinosFeitos))
 

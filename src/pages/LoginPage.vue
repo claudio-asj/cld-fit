@@ -62,14 +62,24 @@
       </q-card-section>
 
       <q-card-actions align="center">
-        <q-btn label="Voltar" color="red-8" @click="showModal = false" />
-        <q-btn
-          label="Fale comigo"
-          color="green"
-          unelevated
-          href="https://wa.me/5521979317341"
-          target="_blank"
-        />
+        <div style="display: grid; gap: 12px; width: 100%">
+          <q-btn
+            style="width: 1005"
+            no-caps
+            label="Continuar"
+            color="primary"
+            @click="showModal = false"
+          />
+          <q-btn
+            label="Fale comigo"
+            color="green"
+            unelevated
+            flat
+            no-caps
+            href="https://wa.me/5521979317341"
+            target="_blank"
+          />
+        </div>
       </q-card-actions>
     </q-card>
   </q-dialog>

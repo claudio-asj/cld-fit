@@ -44,7 +44,7 @@
           </div>
 
           <div v-for="(exercicioItem, i) in serie.exercicios" :key="i" class="q-mb-md">
-            <q-card flat bordered class="bg-grey-2 q-pa-sm">
+            <q-card flat bordered class="q-pa-sm">
               <div class="row items-start q-col-gutter-sm">
                 <q-select
                   v-model="exercicioItem.exercicio"

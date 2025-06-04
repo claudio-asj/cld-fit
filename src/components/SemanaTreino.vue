@@ -9,22 +9,30 @@
       <div>
         <strong>{{ dia.nome }}</strong>
       </div>
-      <div>{{ formatDiaMes(dia.data) }}</div>
+      <div>{{ formatDiaMes(dia.dataString) }}</div>
       <div class="icon">{{ getStatusIcon(dia.dataString) }}</div>
     </div>
   </section>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 
-// Lista de treinos feitos
-const treinosFeitos = ref([
-  { nome: 'teste', data: '01/06/2025', imagem: '...' },
-  { nome: 'ombro', data: '02/06/2025', imagem: '...' },
-])
+// Carrega os treinos feitos do localStorage
+function carregarTreinosLocalStorage() {
+  const dados = localStorage.getItem('treinosFeitos')
+  if (!dados) return []
+  try {
+    return JSON.parse(dados)
+  } catch {
+    return []
+  }
+}
 
-// Funções de formatação
+// Estado dos treinos feitos
+const treinosFeitos = ref([])
+
+// Formata Date para yyyy-mm-dd
 function formatData(date) {
   const yyyy = date.getFullYear()
   const mm = String(date.getMonth() + 1).padStart(2, '0')
@@ -32,17 +40,23 @@ function formatData(date) {
   return `${yyyy}-${mm}-${dd}`
 }
 
-function formatDiaMes(date) {
-  return date.toLocaleDateString('pt-BR', {
-    day: '2-digit',
-    month: '2-digit',
-  })
+// Converte dd/mm/yyyy para yyyy-mm-dd
+function parseDataDDMMYYYY(data) {
+  const [dd, mm, yyyy] = data.split('/')
+  return `${yyyy}-${mm.padStart(2, '0')}-${dd.padStart(2, '0')}`
 }
 
+// Formata para mostrar só dia/mês (dd/mm)
+function formatDiaMes(dataString) {
+  const [, mm, dd] = dataString.split('-')
+  return `${dd}/${mm}`
+}
+
+// Hoje e hojeString (yyyy-mm-dd)
 const hoje = new Date()
 const hojeString = formatData(hoje)
 
-// Início da semana (domingo)
+// Pega o domingo da semana atual
 function getInicioSemana(date) {
   const diaSemana = date.getDay()
   const inicio = new Date(date)
@@ -52,8 +66,13 @@ function getInicioSemana(date) {
 
 const inicioSemana = getInicioSemana(hoje)
 
-const semana = ref(
-  Array.from({ length: 7 }, (_, i) => {
+// Gera os 7 dias da semana atual (domingo a sábado)
+const semana = ref([])
+
+onMounted(() => {
+  treinosFeitos.value = carregarTreinosLocalStorage()
+
+  semana.value = Array.from({ length: 7 }, (_, i) => {
     const diaData = new Date(inicioSemana)
     diaData.setDate(inicioSemana.getDate() + i)
     return {
@@ -62,36 +81,30 @@ const semana = ref(
       dataString: formatData(diaData),
     }
   })
-)
+})
 
-// Checa se um treino foi feito em uma data (formato YYYY-MM-DD)
-function treinoFoiFeito(dataString) {
-  return treinosFeitos.value.some((treino) => {
-    const [dia, mes, ano] = treino.data.split('/')
-    const treinoDataString = `${ano}-${mes}-${dia}`
-    return treinoDataString === dataString
-  })
+// Verifica se treino foi feito naquela data
+function treinoFoiFeito(dataCalendarioString) {
+  return treinosFeitos.value.some(
+    (treino) => parseDataDDMMYYYY(treino.data) === dataCalendarioString
+  )
 }
 
+// Classe para destacar o dia de hoje
 function getDiaClass(dia) {
   return dia.dataString === hojeString ? 'bg-primary text-white' : ''
 }
 
+// Retorna ícone correto conforme regra
 function getStatusIcon(dataString) {
   const hojeTimestamp = new Date(hojeString).getTime()
   const dataTimestamp = new Date(dataString).getTime()
-
   const foiFeito = treinoFoiFeito(dataString)
 
-  if (foiFeito) {
-    return dataString === hojeString ? '🔥' : '✅'
-  }
-
-  if (dataTimestamp < hojeTimestamp) {
-    return '❌' // Passado e não feito
-  }
-
-  return '🕒' // Futuro (ou hoje) e ainda não feito
+  if (foiFeito) return '✅'
+  if (dataTimestamp < hojeTimestamp) return '❌'
+  if (dataTimestamp === hojeTimestamp) return '🔥'
+  return '🕒'
 }
 </script>
 
